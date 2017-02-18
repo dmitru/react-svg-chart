@@ -7,6 +7,23 @@ import moment from 'moment';
 import Chart from './chart/ChartComponent';
 import generateTestData from '../data/testDataGenerator';
 
+moment.locale('ru', {
+  months: [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь'
+  ]
+});
+
 class AppComponent extends React.Component {
   constructor(props) {
     super(props);
