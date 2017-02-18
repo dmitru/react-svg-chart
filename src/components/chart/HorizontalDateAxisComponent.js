@@ -10,38 +10,45 @@ class HorizontalDateAxisComponent extends React.Component {
     const { axis } = this.props;
     const { tickValues, tickPositions } = axis;
     const nTicks = tickValues.length;
+
+    const widthPerTick = axis.outputRange / nTicks;
+    const minWidth = 100;
+    const showEveryNthTick = Math.max(1, Math.ceil(minWidth / widthPerTick));
+
+    const displayedTicks = tickValues.map((tickValue, index) => {
+      const tickMonth = new Date(tickValue).getMonth();
+      const shouldShowTick = index === 0 ||
+        index % showEveryNthTick === 0;
+
+      if (!shouldShowTick) {
+        return null;
+      }
+
+      if (tickMonth === 0 || index === 0) {
+        return (
+          <g key={index}>
+            <text x={tickPositions[index]} y={0}>
+              { moment(tickValue).format('MMMM') }
+            </text>
+            <text x={tickPositions[index]} y="1.2em">
+              { moment(tickValue).format('YYYY') }
+            </text>
+          </g>
+        )
+      } else {
+        return (
+          <g key={index}>
+            <text x={tickPositions[index]} y={0}>
+              { moment(tickValue).format('MMMM') }
+            </text>
+          </g>
+        )
+      }
+    }).filter((x) => x);
+
     return (
       <g className="axis-horizontal">
-        {tickValues.map((tickValue, index) => {
-          const tickMonth = new Date(tickValue).getMonth();
-          const shouldShowTick = nTicks <= 12 ? true :
-            nTicks <= 2 * 12 ? tickMonth % 3 === 0 :
-            nTicks <= 3 * 12 ? tickMonth % 4 === 0 :
-            nTicks <= 4 * 12 ? tickMonth % 6 === 0 :
-              tickMonth === 0;
-          if (!shouldShowTick) {
-            return null;
-          }
-
-          if (tickMonth === 0 || index === 0) {
-            return (
-              <g key={index}>
-                <text x={tickPositions[index]} y={0}>
-                  { moment(tickValue).format('MMMM') }
-                </text>
-                <text x={tickPositions[index]} y="1.2em">
-                  { moment(tickValue).format('YYYY') }
-                </text>
-              </g>
-            )
-          } else {
-            return (
-              <text key={index} x={tickPositions[index]} y={0}>
-                { moment(tickValue).format('MMMM') }
-              </text>
-            )
-          }
-        })}
+        {displayedTicks}
       </g>
     );
   }

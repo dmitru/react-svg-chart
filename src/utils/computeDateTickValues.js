@@ -9,7 +9,6 @@ function computeDateTickValues({ min, max }) {
     result.push(currentValue.toDate());
     currentValue = currentValue.add(1, 'M');
   }
-  console.log(result);
   return result;
 }
 

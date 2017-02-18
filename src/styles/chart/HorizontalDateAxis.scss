@@ -1,7 +1,21 @@
 .axis-horizontal {
-  text {
-    font-size: 16px;
-    fill: #b4b9bf;
-    text-anchor: begin;
+  g {
+    text {
+      font-size: 16px;
+      fill: #b4b9bf;
+      text-anchor: middle;
+    }
+
+    &:first-child {
+      text {
+        text-anchor: start;
+      }
+    }
+
+    &:last-child {
+      text {
+        text-anchor: end;
+      }
+    }
   }
 }

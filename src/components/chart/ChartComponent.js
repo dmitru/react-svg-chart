@@ -36,32 +36,36 @@ class ChartComponent extends React.Component {
     const xAxis = new DateAxis({
       data: xData,
       outputFrom: 0,
-      outputTo: width - padding.left - padding.right
+      outputTo: width - padding.left - padding.right - padding.chartLeft
     });
 
     return (
-      <div className="chart-component-wrapper">
-        <svg className="chart-component" width={width} height={height}>
-          <rect className="background" x={0} width={width} y={0} height={height} />
+      <svg className="chart-component" width={width} height={height}>
+        <rect className="background" x={0} width={width} y={0} height={height} />
 
-          <g transform={`translate(${padding.left}, ${padding.top})`}>
-            <g transform={`translate(${padding.chartLeft}, 0)`}>
-              <GridLinesComponent
-                yAxis={yAxis}
-                width={width - padding.left - padding.right - padding.chartLeft}
-              />
-            </g>
-
-            <VerticalAxis axis={yAxis} />
+        <g transform={`translate(${padding.left}, ${padding.top})`}>
+          <g transform={`translate(${padding.chartLeft}, 0)`}>
+            <GridLinesComponent
+              yAxis={yAxis}
+              width={width - padding.left - padding.right - padding.chartLeft}
+            />
           </g>
 
-          <g transform={`translate(${padding.left + padding.chartLeft}, ${height - padding.bottom})`}>
-            <HorizontalDateAxis axis={xAxis} />
-          </g>
+          <VerticalAxis axis={yAxis} />
+        </g>
 
-          <LineChart data={data} />
-        </svg>
-      </div>
+        <g transform={`translate(${padding.left + padding.chartLeft}, ${height - padding.bottom})`}>
+          <HorizontalDateAxis axis={xAxis} />
+        </g>
+
+        <g transform={`translate(${padding.left + padding.chartLeft}, ${padding.top})`}>
+          <LineChart
+            data={data}
+            xAxis={xAxis}
+            yAxis={yAxis}
+          />
+        </g>
+      </svg>
     );
   }
 }
@@ -76,7 +80,7 @@ ChartComponent.propTypes = {
 ChartComponent.defaultProps = {
   data: [],
   height: 400,
-  width: 1000
+  width: 1300
 };
 
 export default ChartComponent;

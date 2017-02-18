@@ -11,8 +11,8 @@ class Axis {
     this.dataMax = _max(data);
     this.dataRange = this.dataMax - this.dataMin;
 
-    this.outputMin = outputFrom;
-    this.outputMax = outputTo;
+    this.outputFrom = outputFrom;
+    this.outputTo = outputTo;
     this.outputRange = Math.abs(outputTo - outputFrom);
 
     this._tickValues = null;
@@ -28,8 +28,13 @@ class Axis {
   }
 
   scale(value) {
-    const { dataRange, dataMin, outputMin, outputRange } = this;
-    const scaledValue = (value - dataMin) / dataRange * outputRange + outputMin;
+    const { dataRange, dataMin, outputFrom, outputTo, outputRange } = this;
+    let scaledValue;
+    if (outputFrom < outputTo) {
+      scaledValue = (value - dataMin) / dataRange * outputRange + outputFrom;
+    } else {
+      scaledValue = outputFrom - (value - dataMin) / dataRange * outputRange;
+    }
     return scaledValue;
   }
 }
@@ -43,8 +48,8 @@ export class NumericAxis extends Axis {
       max: this.dataMax
     });
     this._tickPositions = computeTickPositions({
-      min: this.outputMin,
-      max: this.outputMax,
+      min: this.outputFrom,
+      max: this.outputTo,
       nTicks: this._tickValues.length
     });
   }
@@ -52,22 +57,21 @@ export class NumericAxis extends Axis {
 
 export class DateAxis extends Axis {
   constructor({ data, outputFrom, outputTo }) {
-    const dataTransformed = data.map((d) => d.getTime());
-    super({ data: dataTransformed, outputFrom, outputTo });
+    super({ data, outputFrom, outputTo });
 
     this._tickValues = computeDateTickValues({
       min: this.dataMin,
       max: this.dataMax
     });
     this._tickPositions = computeTickPositions({
-      min: this.outputMin,
-      max: this.outputMax,
+      min: this.outputFrom,
+      max: this.outputTo,
       nTicks: this._tickValues.length
     });
   }
 
   scale(value) {
-    const transformedValue = value.getTime();
+    const transformedValue = value.valueOf();
     return super.scale(transformedValue);
   }
 }
