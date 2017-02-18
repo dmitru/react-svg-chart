@@ -2,15 +2,22 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
-
-let yeomanImage = require('../images/yeoman.png');
+import Chart from './chart/ChartComponent';
+import generateTestData from '../data/testDataGenerator';
 
 class AppComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: generateTestData()
+    };
+  }
+
   render() {
     return (
       <div className="index">
-        <img src={yeomanImage} alt="Yeoman Generator" />
-        <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
+        <h1>SVG Timeseries Chart</h1>
+        <Chart data={this.state.data} />
       </div>
     );
   }
