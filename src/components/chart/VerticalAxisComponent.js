@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 
 require('styles/chart/VerticalAxis.scss');
 
-class VerticalAxisComponent extends React.Component {
+class VerticalAxisComponent extends React.PureComponent {
   render() {
     const { axis } = this.props;
     const { tickValues, tickPositions } = axis;

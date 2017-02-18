@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 
 require('styles/chart/GridLines.scss');
 
-class GridLinesComponent extends React.Component {
+class GridLinesComponent extends React.PureComponent {
   render() {
     const { width, yAxis } = this.props;
     const tickPositions = yAxis.tickPositions;

@@ -15,9 +15,11 @@ class AppComponent extends React.Component {
     };
 
     this.regenerateData = this.regenerateData.bind(this);
+    this.handleRefreshLotsOfData = this.handleRefreshLotsOfData.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
   }
 
-  regenerateData() {
+  regenerateData(lotsOfPoints = false) {
     const minDate = new Date(
       2015,
       Math.floor(Math.random() * 12),
@@ -26,11 +28,19 @@ class AppComponent extends React.Component {
     const maxDate = moment(minDate).add(3 + Math.random() * 24, 'M').toDate();
     this.setState({
       data: generateTestData({
-        n: 30 + Math.random() * 100,
+        n: lotsOfPoints ? 10000 : (30 + Math.random() * 100),
         minDate,
         maxDate
       })
     });
+  }
+
+  handleRefresh() {
+    this.regenerateData();
+  }
+
+  handleRefreshLotsOfData() {
+    this.regenerateData(true);
   }
 
   render() {
@@ -40,8 +50,11 @@ class AppComponent extends React.Component {
         <div className="chart-component-wrapper">
           <Chart data={this.state.data} />
         </div>
-        <button onClick={this.regenerateData}>
+        <button onClick={this.handleRefresh}>
           Refresh
+        </button>
+        <button onClick={this.handleRefreshLotsOfData}>
+          Refresh (10k points)
         </button>
       </div>
     );

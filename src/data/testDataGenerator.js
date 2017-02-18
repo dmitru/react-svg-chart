@@ -7,7 +7,7 @@
  }
 */
 function generateTestData(options = {}) {
-  const n = options.n || 100;
+  const n = options.n || 30;
   const minDate = options.minDate || new Date(2015, 0, 1);
   const maxDate = options.maxDate || new Date(2016, 0, 1);
   const minValue = typeof options.minValue === 'undefined' ? 10 : options.minValue;

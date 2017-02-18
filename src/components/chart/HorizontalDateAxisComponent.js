@@ -5,7 +5,7 @@ import moment from 'moment';
 
 require('styles/chart/HorizontalDateAxis.scss');
 
-class HorizontalDateAxisComponent extends React.Component {
+class HorizontalDateAxisComponent extends React.PureComponent {
   render() {
     const { axis } = this.props;
     const { tickValues, tickPositions } = axis;

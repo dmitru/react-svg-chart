@@ -27,6 +27,14 @@ class Axis {
     return this._tickValues;
   }
 
+  get outputMin() {
+    return Math.min(this.outputFrom, this.outputTo);
+  }
+
+  get outputMax() {
+    return Math.max(this.outputFrom, this.outputTo);
+  }
+
   scale(value) {
     const { dataRange, dataMin, outputFrom, outputTo, outputRange } = this;
     let scaledValue;

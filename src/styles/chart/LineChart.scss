@@ -3,4 +3,9 @@
     stroke: #8ab1cf;
     stroke-width: 2;
   }
+
+  >rect.event-handler {
+    fill: transparent;
+    stroke: none;
+  }
 }
