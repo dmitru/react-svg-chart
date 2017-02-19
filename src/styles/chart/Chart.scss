@@ -1,3 +1,23 @@
+.chart-wrapper {
+  position: relative;
+
+  .tooltip-box {
+    border-radius: 5px;
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 2px 3px 10px #b4b9bf;
+
+    .tooltip-date {
+      color: #b4b9bf;
+    }
+
+    .tooltip-value {
+      padding-top: 5px;
+    }
+  }
+}
+
 svg.chart-component {
   rect.background {
     fill: #f6f7f8;
@@ -7,5 +27,11 @@ svg.chart-component {
     fill: #8ab1cf;
     stroke: #f6f7f8;
     stroke-width: 2;
+  }
+
+  line.tooltip-line {
+    stroke: #b4b9bf;
+    stroke-width: 2;
+    opacity: 0.5;
   }
 }

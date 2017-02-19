@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { PropTypes } from 'react';
+import moment from 'moment';
 
 require('styles/chart/Chart.scss');
 
@@ -124,52 +125,80 @@ class ChartComponent extends React.Component {
     const { xAxis, yAxis, tooltipPoint, padding } = this.state;
 
     return (
-      <svg
-        className="chart-component"
-        width={width}
-        height={height}
-        ref={svg => {
-          this._svg = svg;
-          if (svg) {
-            this._inverseSvgTransform = svg.getScreenCTM().inverse();
-          }
-        }}
-      >
-        <rect className="background" x={0} width={width} y={0} height={height} />
+      <div className="chart-wrapper">
+        <svg
+          className="chart-component"
+          width={width}
+          height={height}
+          ref={svg => {
+            this._svg = svg;
+            if (svg) {
+              this._inverseSvgTransform = svg.getScreenCTM().inverse();
+            }
+          }}
+        >
+          <rect className="background" x={0} width={width} y={0} height={height} />
 
-        <g transform={`translate(${padding.left}, ${padding.top})`}>
-          <g transform={`translate(${padding.chartLeft}, 0)`}>
-            <GridLinesComponent
-              yAxis={yAxis}
-              width={width - padding.left - padding.right - padding.chartLeft}
-            />
+          <g transform={`translate(${padding.left}, ${padding.top})`}>
+            <g transform={`translate(${padding.chartLeft}, 0)`}>
+              <GridLinesComponent
+                yAxis={yAxis}
+                width={width - padding.left - padding.right - padding.chartLeft}
+              />
+            </g>
+
+            <VerticalAxis axis={yAxis} />
           </g>
 
-          <VerticalAxis axis={yAxis} />
-        </g>
+          <g transform={`translate(${padding.left + padding.chartLeft}, ${height - padding.bottom})`}>
+            <HorizontalDateAxis axis={xAxis} />
+          </g>
 
-        <g transform={`translate(${padding.left + padding.chartLeft}, ${height - padding.bottom})`}>
-          <HorizontalDateAxis axis={xAxis} />
-        </g>
-
-        <g transform={`translate(${padding.left + padding.chartLeft}, ${padding.top})`}>
-          <LineChart
-            data={data}
-            xAxis={xAxis}
-            yAxis={yAxis}
-            onMouseMove={this.handleMouseMove}
-            onMouseOut={this.handleMouseOut}
-          />
-          {tooltipPoint && (
-            <circle
-              className="tooltip-point"
-              cx={xAxis.scale(tooltipPoint.x)}
-              cy={yAxis.scale(tooltipPoint.y)}
-              r="7"
+          <g transform={`translate(${padding.left + padding.chartLeft}, ${padding.top})`}>
+            <LineChart
+              data={data}
+              xAxis={xAxis}
+              yAxis={yAxis}
+              onMouseMove={this.handleMouseMove}
+              onMouseOut={this.handleMouseOut}
             />
-          )}
-        </g>
-      </svg>
+            {tooltipPoint && (
+              <line
+                strokeDasharray="5, 5"
+                className="tooltip-line"
+                x1={xAxis.scale(tooltipPoint.x)}
+                x2={xAxis.scale(tooltipPoint.x)}
+                y1={yAxis.scale(tooltipPoint.y)}
+                y2={height - padding.bottom - padding.top - padding.chartBottom}
+              />
+            )}
+            {tooltipPoint && (
+              <circle
+                className="tooltip-point"
+                cx={xAxis.scale(tooltipPoint.x)}
+                cy={yAxis.scale(tooltipPoint.y)}
+                r="7"
+              />
+            )}
+          </g>
+        </svg>
+        {tooltipPoint && (
+          <div
+            className="tooltip-box"
+            style={{
+              left: xAxis.scale(tooltipPoint.x) + padding.left + padding.chartLeft + 10,
+              top: yAxis.scale(tooltipPoint.y) - 50
+            }}
+          >
+            <div className="tooltip-date">
+              {moment(tooltipPoint.x).format('DD MMMM YYYY')}
+            </div>
+            <div className="tooltip-value">
+              {`$ ${tooltipPoint.y.toFixed(2).replace('.', ',')}`}
+            </div>
+          </div>
+        )}
+      </div>
     );
   }
 }
