@@ -1,7 +1,6 @@
 'use strict';
 
 import React, { PropTypes } from 'react';
-import moment from 'moment';
 
 require('styles/chart/Chart.scss');
 
@@ -12,6 +11,7 @@ import HorizontalDateAxis from './HorizontalDateAxisComponent';
 import VerticalAxis from './VerticalAxisComponent';
 import GridLinesComponent from './GridLinesComponent';
 import LineChart from './LineChartComponent';
+import { TooltipBox, TooltipPoint, TooltipLine } from './TooltipComponent';
 
 class ChartComponent extends React.Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class ChartComponent extends React.Component {
     };
 
     this.state = {
-      tooltipPoint: null,
+      tooltipPointIndex: null,
       padding
     };
   }
@@ -85,27 +85,28 @@ class ChartComponent extends React.Component {
     const { data } = this.props;
     const cursorLocation = this._getCursor(evt);
     const nextPointIndex = lowerBound(data, cursorLocation, this._compare);
+    const prevPointIndex = nextPointIndex > 0 ? nextPointIndex - 1 : null;
     const nextPoint = nextPointIndex && data[nextPointIndex];
-    const prevPoint = nextPointIndex != null ?
-      data[nextPointIndex - 1] : data[data.length - 1];
+    const prevPoint = prevPointIndex && data[prevPointIndex];
 
     if (nextPoint || prevPoint) {
       const nextDistance = nextPoint && this._distance(nextPoint, cursorLocation);
       const prevDistance = prevPoint && this._distance(prevPoint, cursorLocation);
-      let tooltipPoint;
+      let tooltipPointIndex;
       if (nextDistance != null && prevDistance != null) {
-        tooltipPoint = (nextDistance < prevDistance) ? nextPoint : prevPoint;
+        tooltipPointIndex = (nextDistance < prevDistance) ?
+          nextPointIndex : prevPointIndex;
       } else if (nextDistance != null) {
-        tooltipPoint = nextPoint;
+        tooltipPointIndex = nextPointIndex;
       } else {
-        tooltipPoint = prevPoint;
+        tooltipPointIndex = prevPointIndex;
       }
-      this.setState({ tooltipPoint });
+      this.setState({ tooltipPointIndex });
     }
   }
 
   handleMouseOut() {
-    this.setState({ tooltipPoint: null });
+    this.setState({ tooltipPointIndex: null });
   }
 
   _compare(dataPoint, cursorPoint) {
@@ -122,7 +123,10 @@ class ChartComponent extends React.Component {
 
   render() {
     const { width, height, data } = this.props;
-    const { xAxis, yAxis, tooltipPoint, padding } = this.state;
+    const { xAxis, yAxis, tooltipPointIndex, padding } = this.state;
+
+    const tooltipPoint = tooltipPointIndex != null && data[tooltipPointIndex];
+    const tooltipPrevPoint = tooltipPointIndex > 0 && data[tooltipPointIndex - 1];
 
     return (
       <div className="chart-wrapper">
@@ -163,40 +167,29 @@ class ChartComponent extends React.Component {
               onMouseOut={this.handleMouseOut}
             />
             {tooltipPoint && (
-              <line
-                strokeDasharray="5, 5"
-                className="tooltip-line"
-                x1={xAxis.scale(tooltipPoint.x)}
-                x2={xAxis.scale(tooltipPoint.x)}
+              <TooltipLine
+                x={xAxis.scale(tooltipPoint.x)}
                 y1={yAxis.scale(tooltipPoint.y)}
                 y2={height - padding.bottom - padding.top - padding.chartBottom}
               />
             )}
             {tooltipPoint && (
-              <circle
-                className="tooltip-point"
-                cx={xAxis.scale(tooltipPoint.x)}
-                cy={yAxis.scale(tooltipPoint.y)}
-                r="7"
+              <TooltipPoint
+                x={xAxis.scale(tooltipPoint.x)}
+                y={yAxis.scale(tooltipPoint.y)}
+                r={7}
               />
             )}
           </g>
         </svg>
         {tooltipPoint && (
-          <div
-            className="tooltip-box"
-            style={{
-              left: xAxis.scale(tooltipPoint.x) + padding.left + padding.chartLeft + 10,
-              top: yAxis.scale(tooltipPoint.y) - 50
-            }}
-          >
-            <div className="tooltip-date">
-              {moment(tooltipPoint.x).format('DD MMMM YYYY')}
-            </div>
-            <div className="tooltip-value">
-              {`$ ${tooltipPoint.y.toFixed(2).replace('.', ',')}`}
-            </div>
-          </div>
+          <TooltipBox
+            x={xAxis.scale(tooltipPoint.x) + padding.left + padding.chartLeft + 10}
+            y={yAxis.scale(tooltipPoint.y) - 50}
+            date={tooltipPoint.x}
+            currentValue={tooltipPoint.y}
+            previousValue={tooltipPrevPoint ? tooltipPrevPoint.y : null}
+          />
         )}
       </div>
     );
