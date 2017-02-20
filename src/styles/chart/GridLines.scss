@@ -1,5 +1,6 @@
 .grid-lines-horizontal {
   line {
+    pointer-events: none;
     stroke: #b4b9bf;
     opacity: 0.5;
     stroke-width: 1;

@@ -37,12 +37,14 @@ svg.chart-component {
   }
 
   circle.tooltip-point {
+    pointer-events: none;
     fill: #8ab1cf;
     stroke: #f6f7f8;
     stroke-width: 2;
   }
 
   line.tooltip-line {
+    pointer-events: none;
     stroke: #b4b9bf;
     stroke-width: 2;
     opacity: 0.5;
