@@ -2,6 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import moment from 'moment';
+import capitalize from 'lodash/capitalize';
 
 require('styles/chart/HorizontalDateAxis.scss');
 
@@ -28,7 +29,7 @@ class HorizontalDateAxisComponent extends React.PureComponent {
         return (
           <g key={index}>
             <text x={tickPositions[index]} y={0}>
-              { moment(tickValue).format('MMMM') }
+              { capitalize(moment(tickValue).format('MMMM')) }
             </text>
             <text x={tickPositions[index]} y="1.2em">
               { moment(tickValue).format('YYYY') }
@@ -39,7 +40,7 @@ class HorizontalDateAxisComponent extends React.PureComponent {
         return (
           <g key={index}>
             <text x={tickPositions[index]} y={0}>
-              { moment(tickValue).format('MMMM') }
+              { capitalize(moment(tickValue).format('MMMM')) }
             </text>
           </g>
         )
