@@ -1,19 +1,30 @@
+@import '../themes.scss';
+
 .chart-wrapper {
   position: relative;
 
   .tooltip-box {
     border-radius: 5px;
     position: absolute;
-    background-color: white;
     padding: 10px;
-    box-shadow: 2px 3px 10px #b4b9bf;
     white-space: nowrap;
 
+    @include themify {
+      box-shadow: themed('tooltipBoxShadow');
+      background-color: themed('tooltipBackground');
+    }
+
     .tooltip-date {
-      color: #b4b9bf;
+      @include themify {
+        color: themed('tooltipDateColor');
+      }
     }
 
     .tooltip-value {
+      @include themify {
+        color: themed('tooltipValueColor');
+      }
+
       padding-top: 5px;
     }
 
@@ -33,20 +44,28 @@
 
 svg.chart-component {
   rect.background {
-    fill: #f6f7f8;
+    @include themify {
+      fill: themed('chartBackground');
+    }
   }
 
   circle.tooltip-point {
     pointer-events: none;
-    fill: #8ab1cf;
-    stroke: #f6f7f8;
     stroke-width: 2;
+
+    @include themify {
+      stroke: themed('chartBackground');
+      fill: themed('chartLineColor');
+    }
   }
 
   line.tooltip-line {
     pointer-events: none;
-    stroke: #b4b9bf;
     stroke-width: 2;
     opacity: 0.5;
+
+    @include themify {
+      stroke: themed('chartLineColor');
+    }
   }
 }

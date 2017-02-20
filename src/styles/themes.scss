@@ -1,0 +1,66 @@
+$themes: (
+  light: (
+    chartBackground: #f6f7f8,
+    chartAxisColor: #b4b9bf,
+    chartLabelsColor: #b4b9bf,
+    chartLineColor: #8ab1cf,
+
+    tooltipBackground: white,
+    tooltipDateColor: #b4b9bf,
+    tooltipValueColor: black,
+    tooltipBoxShadow: 2px 3px 10px #b4b9bf
+  ),
+  dark: (
+    chartBackground: #004D66,
+    chartAxisColor: #b4b9bf,
+    chartLabelsColor: #b4b9bf,
+    chartLineColor: #E0A800,
+
+    tooltipBackground: #444,
+    tooltipDateColor: #b4b9bf,
+    tooltipValueColor: white,
+    tooltipBoxShadow: none
+  ),
+);
+
+/*
+ * Implementation of themes
+ */
+@function map-fetch($map, $keys) {
+  $key: nth($keys, 1);
+  $length: length($keys);
+  $value: map-get($map, $key);
+  @if $value !=null {
+    @if $length > 1 {
+      $rest: ();
+      @for $i from 2 through $length {
+        $rest: append($rest, nth($keys, $i));
+      }
+      @return map-fetch($value, $rest);
+    }
+    @else {
+      @return $value;
+    }
+  }
+  @else {
+    @return false;
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+
+@mixin themify($themes: $themes) {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-fetch($themes, $theme '#{$key}');
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}

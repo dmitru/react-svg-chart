@@ -1,5 +1,5 @@
 require('normalize.css/normalize.css');
-require('styles/App.css');
+require('styles/App.scss');
 
 import React from 'react';
 import moment from 'moment';
@@ -14,12 +14,14 @@ class AppComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: generateTestData()
+      data: generateTestData(),
+      theme: 'light'
     };
 
     this.regenerateData = this.regenerateData.bind(this);
     this.handleRefreshLotsOfData = this.handleRefreshLotsOfData.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
+    this.handleThemeChange = this.handleThemeChange.bind(this);
   }
 
   regenerateData(lotsOfPoints = false) {
@@ -46,19 +48,30 @@ class AppComponent extends React.Component {
     this.regenerateData(true);
   }
 
+  handleThemeChange(event) {
+    this.setState({ theme: event.target.value });
+  }
+
   render() {
+    const { theme } = this.state;
     return (
-      <div className="index">
+      <div className={`index theme-${theme}`}>
         <h1>SVG Timeseries Chart</h1>
         <div className="chart-component-wrapper">
           <Chart data={this.state.data} />
         </div>
-        <button onClick={this.handleRefresh}>
-          Refresh
-        </button>
-        <button onClick={this.handleRefreshLotsOfData}>
-          Refresh (10k points)
-        </button>
+        <div className="controls">
+            <select onChange={this.handleThemeChange} value={theme}>
+              <option value="light">Light theme</option>
+              <option value="dark">Dark theme</option>
+            </select>
+            <button onClick={this.handleRefresh}>
+              Refresh
+            </button>
+            <button onClick={this.handleRefreshLotsOfData}>
+              Refresh (10k points)
+            </button>
+        </div>
       </div>
     );
   }

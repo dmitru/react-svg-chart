@@ -1,0 +1,39 @@
+/* Base Application Styles */
+body {
+  color: #000;
+  background: #fff;
+}
+
+body, html {
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-top: 4rem;
+}
+
+.index {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.chart-component-wrapper {
+  margin-bottom: 30px;
+}
+
+.controls {
+  >select {
+    display: block;
+  }
+
+  >* {
+    margin: 1rem 0.5rem;
+  }
+}
