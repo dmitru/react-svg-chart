@@ -71,8 +71,13 @@ class ChartComponent extends React.Component {
   _getCursor(evt) {
     const svg = this._svg;
     const point = svg.createSVGPoint();
-    point.x = evt.clientX;
-    point.y = evt.clientY;
+    if (evt.touches && evt.touches.length > 0) {
+      point.x = evt.touches[0].clientX;
+      point.y = evt.touches[0].clientY;
+    } else {
+      point.x = evt.clientX;
+      point.y = evt.clientY;
+    }
     return point.matrixTransform(this._inverseSvgTransform);
   }
 

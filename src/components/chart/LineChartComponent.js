@@ -26,7 +26,9 @@ class LineChart extends React.PureComponent {
           y={yAxis.outputMin}
           height={yAxis.outputRange}
           onMouseMove={onMouseMove}
+          onTouchMove={onMouseMove}
           onMouseOut={onMouseOut}
+          onTouchEnd={onMouseOut}
         />
         {segments}
       </g>
